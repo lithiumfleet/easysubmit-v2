@@ -17,4 +17,7 @@ import FileUploader from './FileUploader.vue';
     display: flex;
     flex-direction: column;
 }
+.flow_area > * {
+    margin-top: 20%;
+}
 </style>
