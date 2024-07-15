@@ -5,7 +5,7 @@ import FileUploader from './FileUploader.vue';
 </script>
 
 <template>
-    <div class="flow_area">
+    <div class="flow-area">
         <IDInserter/>
         <TaskSelector/>
         <FileUploader/>
@@ -13,11 +13,12 @@ import FileUploader from './FileUploader.vue';
 </template>
 
 <style scoped>
-.flow_area {
+.flow-area {
     display: flex;
     flex-direction: column;
+    width: 50%;
 }
-.flow_area > * {
-    margin-top: 20%;
+.flow-area > * {
+    margin-top: 2em;
 }
 </style>

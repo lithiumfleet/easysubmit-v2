@@ -56,6 +56,5 @@ function handleBlur() {
 <style scoped>
 .notice {
     margin-bottom: 10px;
-    font-size: small;
 }
 </style>

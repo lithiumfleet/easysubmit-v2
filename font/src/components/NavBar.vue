@@ -25,6 +25,10 @@
     width:100%;
     position: sticky;
     top: 0px;
+    padding: 1em;
+    z-index: 1000;
+    background-color: whitesmoke;
+    background-clip: border-box;
 }
 
 .icon {

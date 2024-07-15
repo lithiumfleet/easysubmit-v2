@@ -11,6 +11,9 @@ import FlowArea from './components/FlowArea.vue';
 
     <FlowArea/>
   </div>
+  <footer>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+  </footer>
 
 </template>
 
