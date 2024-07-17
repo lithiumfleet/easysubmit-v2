@@ -1,7 +1,7 @@
 <script setup>
 import NavBar from './components/NavBar.vue'
 import WelcomeTitle from './components/WelcomeTitle.vue';
-import FlowArea from './components/FlowArea.vue';
+import FlowAreaV2 from './components/FlowAreaV2.vue';
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import FlowArea from './components/FlowArea.vue';
   <div class="user-area">
     <WelcomeTitle/>  
 
-    <FlowArea/>
+    <FlowAreaV2/>
   </div>
   <footer>
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
