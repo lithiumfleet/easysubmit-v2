@@ -1,7 +1,7 @@
 <script setup>
-import IDInserter from './IDInserter.vue';
-import TaskSelector from './TaskSelector.vue';
-import FileUploader from './FileUploader.vue';
+import IDInserter from './FlowComponents/IDInserter.vue';
+import TaskSelector from './FlowComponents/TaskSelector.vue';
+import FileUploader from './FlowComponents/FileUploader.vue';
 </script>
 
 <template>

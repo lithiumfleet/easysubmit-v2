@@ -3,7 +3,7 @@ import TaskCard from './TaskCard.vue'
 import { ref,watch,computed } from 'vue'
 let task_1 = {
     taskid: 1,
-    taskname: "数字信号处理实践大作业",
+    taskname: "实践大作业",
     deadline: "2024-12-24",
     status: false,
     description: "第一次课的内容包括：\
@@ -27,10 +27,16 @@ let task_2 = {
 const taskList = [task_1, task_2]; // can get from server
 
 let selectedTaskid = ref(-1);
+let selectedTask = null;
+
 const selectTaskHandler = (taskid) => {
     selectedTaskid.value = taskid;
     console.debug(`select id: ${taskid}`);
 };
+watch(selectedTaskid, (newid, _) => {
+    selectedTask = taskList.filter((task) => task.taskid===newid)[0];
+    console.debug(selectedTask);
+});
 
 </script>
 
@@ -39,6 +45,7 @@ const selectTaskHandler = (taskid) => {
         <div class="notice">
             Step 2. 选择提交任务
         </div>
+        <div v-if="selectedTask !== null">当前选择:{{ selectedTask.taskname }}</div>
         <div class="task-list-warp">
             <div class="task-list" >
                 <TaskCard 
