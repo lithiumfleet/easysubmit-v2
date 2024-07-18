@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from 'vue-router'
 </script>
 
 <template>
@@ -8,13 +9,13 @@
         </div>
         <div class="direct"> </div>
             <div class="list">
-                <div>提交文件</div>
-                <div>提交记录</div>
-                <div>关于网站</div>
+                <RouterLink class="item" to="/">提交文件</RouterLink>
+                <RouterLink class="item" to="/history">提交记录</RouterLink>
+                <div class="item" >关于网站</div>
             </div>
-        <div class="github"> 
+        <a class="github" href="https://github.com/lithiumfleet/easysubmit-v2"> 
             <img src="https://img.icons8.com/?size=100&id=80462&format=png&color=000000" alt="github">
-        </div>
+        </a>
     </nav>
 </template>
 
@@ -45,7 +46,7 @@
     margin-left: 6%;
 }
 
-.list div{
+.list > .item {
     font: bold;
     font-size: small;
     margin-left: 1em;

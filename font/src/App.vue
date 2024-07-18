@@ -1,17 +1,14 @@
 <script setup>
 import NavBar from './components/NavBar.vue'
 import WelcomeTitle from './components/WelcomeTitle.vue';
-import SubmitHistoryPannel from './components/SubmitHistoryPannel.vue';
-import FlowAreaV2 from './components/FlowAreaV2.vue';
+import { RouterView } from 'vue-router';
 </script>
 
 <template>
   <NavBar/>
   <div class="user-area">
     <WelcomeTitle/>  
-
-    <FlowAreaV2/>
-    <!-- <SubmitHistoryPannel/> -->
+    <RouterView/>
   </div>
   <footer>
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
