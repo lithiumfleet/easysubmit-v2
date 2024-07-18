@@ -14,19 +14,28 @@ const createLog = (req, res, next) => {
 };
 app.use(createLog);
 
-app.post('/api/upload_id', (req, res) => {
-    const id = req.body.stu_id;
-    console.log(`req for check id: ${id}`);
-    res.send({ "status": "ok" });
-})
+// app.post('/api/upload_id', (req, res) => {
+//     const id = req.body.stu_id;
+//     console.log(`req for check id: ${id}`);
+//     res.send({ "status": "ok" });
+// })
 
 const stuidlist = ["123","234","345"];
+const idValidator = (req, res, next) => {
+    const id = req.body.stuid;
+    if (stuidlist.includes(id)) {
+        next();
+    } else {
+        res.status(403).send({msg:"invalid stuid"});
+        console.log(`id is not in stuidlist: ${id}`);
+    }
+}
+app.use(idValidator);
 
 app.post('/checkid', (req, res) => {
     const id = req.body.stuid;
-    const msg = {"result": stuidlist.includes(id)};
-    res.send(msg);
-    console.log(`req for check id: ${id} => ${JSON.stringify(msg)}`);
+    res.send({"result": true}); // the middleware 'idValidator' checked.
+    console.log(`req for check id: ${id}`);
 });
 
 app.post('/checktasklist', (req, res) => {
@@ -55,9 +64,18 @@ app.post('/submit', upload.single('file'), (req, res) => {
     console.log('Task ID:', taskid);
     console.log('Uploaded File:', file);
 
-    // You can add additional logic here to handle the form data and the uploaded file
-
     res.send({ status: true });
+});
+
+
+app.post('/checkhistory', (req, res) => {
+    const { stuid } = req.body;
+    console.log(`${stuid} Query for history`);
+    const hist = [ 
+        {taskid:"41",taskname:"数处大作业",time:"12.3",filename:"adsf.doc",coveredfile:"aaaa.docx"},
+        {taskid:"25",taskname:"数电",time:"9.1",filename:"123.png",coveredfile:"555.jpg"}
+    ]
+    res.send(hist);
 });
 
 app.listen(port, () => {

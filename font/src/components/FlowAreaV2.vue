@@ -1,12 +1,12 @@
 <script setup>
-import { defineModel, computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 /* info: get id from user and validate using server, then show tasklist and file uploader */
 /* protocols
 *       post /ckeckid {"stuid": "1234567890"} => {"result": true/false}
 *       post /checktasklist {"stuid": "1234567890"} => [...{"taskid","name","deadline","info","status","allowextent"}]
 *       post /submit {"stuid": "1234567890", "file": file, "taskid"="12"} => {"status": true/false}
-*       post /checkhistory {"stuid": "1234567890"} => {"time", "is"}
+*       post /checkhistory {"stuid": "1234567890"} => {"time", "taskid", "taskname", "filename", "coveredfile"}
 */
 
 let stuid = defineModel();
@@ -62,7 +62,7 @@ function checkID() {
     }
 }
 
-const amiSelected = (taskid) => {
+function amiSelected(taskid) {
     return selectedTaskID.value === taskid ? 'selected' : 'not-selected';
 };
 
@@ -99,7 +99,7 @@ function submitFile() {
             <div v-if="idIsValid!==null&&!idIsValid">请再次检查学号是否输入错误</div>
         </div>
 
-        <div class="task-list">
+        <div v-if="idIsValid" class="task-list">
             <div>step 2. 选择任务</div>
             <div v-for="task in taskList" :key="task.taskid" @click="selectedTaskID=task.taskid" :class="{'not-selected':task.taskid!==selectedTaskID,'selected':task.taskid===selectedTaskID}">
                 taskid: {{ task.taskid }}<br/>
@@ -108,7 +108,7 @@ function submitFile() {
                 info: {{ task.info }}<br/>
             </div>
         </div>
-        <div class="upload-box">
+        <div v-if="idIsValid&&selectedTaskID!==''" class="upload-box">
             <div>step 3. 上传文件</div>
             <input type="file" @change="handleFileUpload" />
             <div v-if="file!==null">当前待提交文件: {{ file.name }}</div>
