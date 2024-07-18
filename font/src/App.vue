@@ -1,7 +1,6 @@
 <script setup>
 import NavBar from './components/NavBar.vue'
 import WelcomeTitle from './components/WelcomeTitle.vue';
-import FlowArea from './components/FlowArea.vue';
 import SubmitHistoryPannel from './components/SubmitHistoryPannel.vue';
 import FlowAreaV2 from './components/FlowAreaV2.vue';
 </script>
@@ -12,6 +11,7 @@ import FlowAreaV2 from './components/FlowAreaV2.vue';
     <WelcomeTitle/>  
 
     <FlowAreaV2/>
+    <!-- <SubmitHistoryPannel/> -->
   </div>
   <footer>
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>

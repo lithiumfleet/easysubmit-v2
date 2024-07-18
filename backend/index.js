@@ -6,22 +6,20 @@ const port = 9999
 
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+
 const createLog = (req, res, next) => {
   res.on("finish", function() {
     console.log(req.method, decodeURI(req.url), res.statusCode, res.statusMessage);
+    console.log(`all data: ${JSON.stringify(req.body)}`);
   });
   next();
 };
 app.use(createLog);
 
-// app.post('/api/upload_id', (req, res) => {
-//     const id = req.body.stu_id;
-//     console.log(`req for check id: ${id}`);
-//     res.send({ "status": "ok" });
-// })
-
 const stuidlist = ["123","234","345"];
 const idValidator = (req, res, next) => {
+    if (req.path === '/submit') return next();
     const id = req.body.stuid;
     if (stuidlist.includes(id)) {
         next();

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { _postToServer } from './_postToServer';
 
 /* info: get id from user and validate using server, then show tasklist and file uploader */
 /* protocols
@@ -9,13 +10,13 @@ import { computed, ref, watch } from 'vue';
 *       post /checkhistory {"stuid": "1234567890"} => {"time", "taskid", "taskname", "filename", "coveredfile"}
 */
 
-let stuid = defineModel();
-let idIsValid = ref(null);
+const stuid = ref(""); // FIXME: what about using const stuid = ref("")? 
+const idIsValid = ref(null);
 
-let taskList = ref([]);
-let selectedTaskID = ref("");
+const taskList = ref([]);
+const selectedTaskID = ref("");
 
-let file = ref(null);
+const file = ref(null);
 
 const selectedTaskStatus = computed(() => {
     if (selectedTaskID.value === "") return false;
@@ -30,31 +31,12 @@ watch(idIsValid, (newVal) => {
     if (newVal) getTaskList();
 });
 
-function _postToServer(endpoint, jsondata, cb) {
-    console.log('send ' + JSON.stringify(jsondata) + ' to server');
-    const url = "http://127.0.0.1:9999" + endpoint;
-    fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(jsondata)
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log('receive data' + JSON.stringify(data));
-        cb(data);
-    })
-    .catch(error => {
-        console.log('receive error' + error);
-    });
-}
-
 function getTaskList() {
     _postToServer('/checktasklist', { "stuid": stuid.value }, data => taskList.value = data);
 }
 
 function checkID() {
+    idIsValid.value = false;
     if (stuid.value === "") {
         idIsValid.value = null;
     } else {
@@ -78,6 +60,7 @@ function submitFile() {
 
     fetch("http://127.0.0.1:9999/submit", {
         method: "POST",
+        enctype: "multipart/form-data",
         body: formData
     })
     .then(res => res.json())
