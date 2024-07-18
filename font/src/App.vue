@@ -2,6 +2,7 @@
 import NavBar from './components/NavBar.vue'
 import WelcomeTitle from './components/WelcomeTitle.vue';
 import FlowArea from './components/FlowArea.vue';
+import SubmitHistoryPannel from './components/SubmitHistoryPannel.vue';
 </script>
 
 <template>
@@ -9,7 +10,7 @@ import FlowArea from './components/FlowArea.vue';
   <div class="user-area">
     <WelcomeTitle/>  
 
-    <FlowArea/>
+    <SubmitHistoryPannel/>
   </div>
   <footer>
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
