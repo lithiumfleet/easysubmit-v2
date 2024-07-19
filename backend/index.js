@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const multer = require('multer');
+const moment = require('moment');
 const port = 9999
 
 app.use(cors())
@@ -70,12 +71,17 @@ app.post('/checkhistory', (req, res) => {
     const { stuid } = req.body;
     console.log(`${stuid} Query for history`);
     const hist = [ 
-        {taskid:"41",taskname:"数处大作业",time:"12.3",filename:"adsf.doc",coveredfile:"aaaa.docx"},
-        {taskid:"25",taskname:"数电",time:"9.1",filename:"123.png",coveredfile:"555.jpg"}
+        {taskid:"41",taskname:"数处大作业",time:"2024-03-20T10:47:38+08:00",filename:"adsf.doc",coveredfile:"aaaa.docx"},
+        {taskid:"25",taskname:"数电",time:"2024-07-20T06:27:38+08:00",filename:"123.png",coveredfile:""},
+        {taskid:"23",taskname:"数字图像处理",time:"2024-02-10T01:47:38+08:00",filename:"1423.png",coveredfile:"5345435.jpg"},
+        {taskid:"7",taskname:"雷达实践",time:"2024-07-20T06:22:39+08:00",filename:"dasfhdshfadd.doc",coveredfile:"ash4qr.docx"},
+        {taskid:"123",taskname:"雷达大作业",time:"2024-07-20T09:27:39+08:00",filename:"dsagfgfdd.doc",coveredfile:"asqrh4qr.docx"},
+        {taskid:"12",taskname:"电磁场",time:"2024-07-20T06:07:39+08:00",filename:"dasfhdfdd.doc",coveredfile:"asdfdso.docx"}
     ]
     res.send(hist);
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    moment.locale('zh-cn');
+    console.log(`${moment().format('MMMDo hh:mm:ss')} Example app listening on port ${port}`)
 })
