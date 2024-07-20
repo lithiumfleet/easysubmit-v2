@@ -11,7 +11,7 @@ import { RouterLink } from 'vue-router'
             <div class="list">
                 <RouterLink class="item" to="/">提交文件</RouterLink>
                 <RouterLink class="item" to="/history">提交记录</RouterLink>
-                <div class="item" >关于网站</div>
+                <RouterLink class="item" to="/about">关于网站</RouterLink>
             </div>
         <a class="github" href="https://github.com/lithiumfleet/easysubmit-v2"> 
             <img src="https://img.icons8.com/?size=100&id=80462&format=png&color=000000" alt="github">
@@ -26,7 +26,7 @@ import { RouterLink } from 'vue-router'
     width:100%;
     position: sticky;
     top: 0px;
-    padding: 1em;
+    padding: 1em 0em 1em 0em;
     z-index: 1000;
     background-color: whitesmoke;
     background-clip: border-box;

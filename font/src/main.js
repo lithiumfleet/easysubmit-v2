@@ -4,6 +4,7 @@ import App from './App.vue'
 
 import SubmitHistoryPannel from './components/SubmitHistoryPannel.vue';
 import FlowAreaV2 from './components/FlowAreaV2.vue';
+import AboutPage from './components/AboutPage.vue';
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 const routes= [
@@ -14,6 +15,10 @@ const routes= [
     { 
         path:"/history", 
         component: SubmitHistoryPannel 
+    },
+    {
+        path:"/about", 
+        component: AboutPage
     }
   ]
 

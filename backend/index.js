@@ -40,9 +40,9 @@ app.post('/checkid', (req, res) => {
 app.post('/checktasklist', (req, res) => {
     const id = req.body.stuid;
     const msg = [
-        {taskid:"41",name:"数处大作业",deadline:"12.4",info:"写完就行",status:"fin",allowextent:"pdf"},
-        {taskid:"34",name:"电磁波",deadline:"1.2",info:"第一章作业",status:"unfin",allowextent:"exe"},
-        {taskid:"36",name:"图像处理",deadline:"9.3",info:"两张图",status:"unfin",allowextent:"word"}
+        {taskid:"41",name:"数处大作业",deadline:"2024-03-20T10:47:38+08:00",info:"写完就行",status:"finished",allowextent:["zip"]},
+        {taskid:"34",name:"电磁波",deadline:"2024-07-20T06:22:39+08:00",info:"第一章作业",status:"unfinished",allowextent:["code"]},
+        {taskid:"36",name:"图像处理",deadline:"2024-07-20T06:27:38+08:00",info:"两张图",status:"unfinished",allowextent:["word","pdf"]}
     ]
     res.send(msg);
     console.log(`id: ${id} => ${JSON.stringify(msg)}`);
@@ -56,14 +56,14 @@ app.post('/submit', upload.single('file'), (req, res) => {
     const file = req.file;
 
     if (!file) {
-        return res.send({status:false});
+        return res.send({ uploadstatus:false });
     }
 
     console.log('Student ID:', stuid);
     console.log('Task ID:', taskid);
     console.log('Uploaded File:', file);
 
-    res.send({ status: true });
+    res.send({ uploadstatus:true });
 });
 
 

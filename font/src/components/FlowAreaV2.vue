@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { _postToServer } from './_postToServer';
+import { _compareTimeString,formatTimeString } from './_timeUtils';
+import UploadFileBox from './UploadFileBox.vue';
 
 /* info: get id from user and validate using server, then show tasklist and file uploader */
 /* protocols
@@ -44,8 +46,8 @@ function checkID() {
     }
 }
 
-function amiSelected(taskid) {
-    return selectedTaskID.value === taskid ? 'selected' : 'not-selected';
+function checkIfSelected(taskid) {
+    return selectedTaskID.value === taskid ? true : false;
 };
 
 function handleFileUpload(event) {
@@ -65,11 +67,19 @@ function submitFile() {
     })
     .then(res => res.json())
     .then(data => {
-        console.log('File upload response:', data.status);
+        console.log('File upload response:', data.uploadstatus);
     })
     .catch(error => {
         console.log('File upload error:', error);
     });
+}
+
+function checkTaskStatus(status) {
+    return status==="finished" ? true : false;
+}
+
+function _printTaskStatus(status) {
+    return checkTaskStatus(status) ? "已提交" : "未提交";
 }
 
 </script>
@@ -77,20 +87,38 @@ function submitFile() {
 <template>
     <div class="flow-area">
         <div class="id-inserter">
-            <div>step 1. 输入学号</div>
+            <div v-if="idIsValid">step 1. 输入学号</div>
+            <div v-else>请输入学号进行后续操作</div>
             <input type="text" v-model="stuid" @blur="checkID"/>
             <div v-if="idIsValid!==null&&!idIsValid">请再次检查学号是否输入错误</div>
         </div>
 
+
+
         <div v-if="idIsValid" class="task-list">
             <div>step 2. 选择任务</div>
-            <div v-for="task in taskList" :key="task.taskid" @click="selectedTaskID=task.taskid" :class="{'not-selected':task.taskid!==selectedTaskID,'selected':task.taskid===selectedTaskID}">
-                taskid: {{ task.taskid }}<br/>
-                taskname: {{ task.name }}<br/>
-                deadline: {{ task.deadline }}<br/>
-                info: {{ task.info }}<br/>
+            <div class="task-card" v-for="task in taskList" :key="task.taskid" @click="selectedTaskID=task.taskid" :class="{'not-selected':!checkIfSelected(task.taskid),'selected':checkIfSelected(task.taskid)}">
+                <div class="details" v-if="checkIfSelected(task.taskid)">
+                    <h3>{{ task.name }}</h3>
+                    <div>任务ID: {{ task.taskid }}</div>
+                    <div>截止日期: {{ formatTimeString(task.deadline, 'MMMDo') }}</div>
+                    <div class="extent-explain">
+                        <div>提交文件类型: </div>
+                        <img v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`" :alt="extent">
+                    </div>
+                    <div> 完成情况: {{ _printTaskStatus(task.status) }} </div>
+                    <p>说明: {{ task.info }}</p>
+                    <UploadFileBox/>
+                </div>
+                <div v-else>
+                    <div class="task-name">{{ task.name }}</div>
+                    <div>{{ formatTimeString(task.deadline, 'MMMDo') }} 截止</div>
+                    <img class="extent-img" v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`" :alt="extent">
+                    <img class="status-img" v-if="checkTaskStatus(task.status)" src="/src/assets/finish.png" alt="status">
+                </div>
             </div>
         </div>
+
         <div v-if="idIsValid&&selectedTaskID!==''" class="upload-box">
             <div>step 3. 上传文件</div>
             <input type="file" @change="handleFileUpload" />
@@ -105,10 +133,45 @@ function submitFile() {
 .flow-area {
     width: 60%;
 }
+.flow-area > * {
+    margin: 2em;
+    text-align: center;
+}
+.id-inserter {
+    margin-top: 0;
+    text-align: center;
+}
 .selected {
-    border: 2px solid greenyellow;
+    border: 1.5px solid greenyellow;
 }
 .not-selected {
     border: 1px solid transparent;
+}
+.task-card {
+    background-color: rgba(118, 114, 120, 0.09);
+    margin: 0.6em;
+    border-radius: 15px;
+    padding: 1em;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.extent-explain {
+    display: inline-flex;
+}
+.extent-explain img {
+    width: 1.5em;
+}
+.extent-img {
+    width: 2em;
+}
+.status-img {
+    position: absolute;
+    bottom: -1em;
+    right: -1em;
+    width: 7em;
+}
+.details {
+    text-align: left;
 }
 </style>
