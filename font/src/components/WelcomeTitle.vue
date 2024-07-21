@@ -16,6 +16,7 @@
     position: relative;
     padding-top: 10%;
     padding-bottom: 8%;
+    margin-bottom: 6%;
 }
 .welcome div {
     color: gray;

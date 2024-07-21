@@ -55,15 +55,23 @@ app.post('/submit', upload.single('file'), (req, res) => {
     const { stuid, taskid } = req.body;
     const file = req.file;
 
+    // test server decay
+    function blockSleep(ms) {
+        const end = Date.now() + ms;
+        while (Date.now() < end) {
+        }
+    }
+
+    blockSleep(2000);
     if (!file) {
-        return res.send({ uploadstatus:false });
+        return res.send({ status:"emptyfile", message:"上传文件为空"});
     }
 
     console.log('Student ID:', stuid);
     console.log('Task ID:', taskid);
     console.log('Uploaded File:', file);
 
-    res.send({ uploadstatus:true });
+    res.send({ status:"ok", message:"文件上传成功" });
 });
 
 

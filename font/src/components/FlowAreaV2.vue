@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { _postToServer } from './_postToServer';
 import { _compareTimeString, formatTimeString } from './_timeUtils';
@@ -8,7 +8,7 @@ import UploadFileBox from './UploadFileBox.vue';
 /* protocols
 *       post /ckeckid {"stuid": "1234567890"} => {"result": true/false}
 *       post /checktasklist {"stuid": "1234567890"} => [...{"taskid","name","deadline","info","status","allowextent"}]
-*       post /submit {"stuid": "1234567890", "file": file, "taskid"="12"} => {"status": true/false}
+*       post /submit {"stuid": "1234567890", "file": file, "taskid"="12"} => {"status":enum Status, "message" }
 *       post /checkhistory {"stuid": "1234567890"} => {"time", "taskid", "taskname", "filename", "coveredfile"}
 */
 
@@ -20,8 +20,25 @@ const selectedTaskID = ref("");
 
 const file = ref(null);
 
+enum Status {
+    // for page state
+    noUploading,
+    uploading,
+    failed,
+    unknownerror,
+    // for server response
+    ok = "ok",
+    emptyfile = "emptyfile",
+    timeout = "timeout"
+}
+
+const uploadStatus: Status = ref(Status.noUploading);
+const uploadStatusMessage = ref("");
+
 watch(selectedTaskID, () => {
     file.value = null;
+    uploadStatus.value = Status.noUploading;
+    uploadStatusMessage.value = "";
 });
 
 watch(idIsValid, (newVal) => {
@@ -41,11 +58,11 @@ function checkID() {
     }
 }
 
-function checkIfSelected(taskid) {
+function checkIfSelected(taskid: string) {
     return selectedTaskID.value === taskid ? true : false;
 }
 
-function handleChangeFile(newFile) {
+function handleChangeFile(newFile: string) {
     file.value = newFile;
 }
 
@@ -55,22 +72,38 @@ function submitFile() {
     formData.append("file", file.value);
     formData.append("taskid", selectedTaskID.value);
 
+    uploadStatus.value = Status.uploading;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     fetch("http://127.0.0.1:9999/submit", {
         method: "POST",
         enctype: "multipart/form-data",
-        body: formData
+        body: formData,
+        signal: controller.signal
     })
         .then(res => res.json())
         .then(data => {
-            console.log('File upload response:', data.uploadstatus);
+            clearTimeout(timeoutId);
+            console.log('File upload response:', data.status, data.message);
+            uploadStatus.value = data.status;
+            uploadStatusMessage.value = data.message;
         })
         .catch(error => {
-            console.log('File upload error:', error);
+            if (error.name === 'AbortError') {
+                console.log('File upload timed out');
+                uploadStatus.value = Status.timeout;
+                uploadStatusMessage.value = "文件提交超时";
+            } else {
+                console.log('File upload error:', error);
+                uploadStatus.value = Status.unknownerror;
+                uploadStatusMessage.value = "请检查网络环境或联系管理员";
+            }
         });
 }
 
 function checkTaskStatus(status) {
-    return status === "finished" ? true : false;
+    return status === "ok" ? true : false;
 }
 
 function _printTaskStatus(status) {
@@ -101,20 +134,29 @@ function _printTaskStatus(status) {
                             <div>任务ID: {{ task.taskid }}</div>
                             <div>截止日期: {{ formatTimeString(task.deadline, 'MMMDo') }}</div>
                             <div class="extent-explain">
-                                <div>提交文件类型: </div>
+                                <div>文件类型: </div>
                                 <img v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
                                     :alt="extent">
                             </div>
                             <div> 完成情况: {{ _printTaskStatus(task.status) }} </div>
                         </div>
-                        <UploadFileBox class="upload-file-box" @change-file="handleChangeFile" :allowed-extent="task.allowextent" />
+                        <UploadFileBox class="upload-file-box" @change-file="handleChangeFile"
+                            :allowed-extent="task.allowextent" />
                     </div>
                     <div class="info-and-button">
                         <p>说明: {{ task.info }}</p>
-
-                        <div v-if="file !== null" class="upload-box">
+                        <div v-if="uploadStatus!==Status.uploading&&uploadStatus!==Status.noUploading" class="upload-box" :class="{isfailed:uploadStatus!==Status.ok, isnormal:uploadStatus===Status.ok}">
+                            <div>{{ uploadStatusMessage }}</div>
+                            <button @click="submitFile">重新提交</button>
+                        </div>
+                        <div v-else-if="uploadStatus===Status.uploading" class="upload-box isuploading">
                             <div>当前待提交文件: {{ file.name }}</div>
-                            <button @click="submitFile">点击提交</button>
+                            <button disabled @click="submitFile">处理中...</button>
+                        </div>
+                        <div v-else-if="file!==null" class="upload-box isnormal">
+                            <div>当前待提交文件: {{ file.name }}</div>
+                            <button v-if="checkTaskStatus(task.status)" @click="submitFile">再次提交</button>
+                            <button v-else @click="submitFile">点击提交</button>
                         </div>
                     </div>
                 </div>
@@ -189,7 +231,7 @@ function _printTaskStatus(status) {
 }
 
 .details h3 {
-    text-align: center;    
+    text-align: center;
 }
 
 .info-and-box {
@@ -199,7 +241,7 @@ function _printTaskStatus(status) {
     margin-inline-end: 2em;
 }
 
-.info-and-box .upload-file-box{
+.info-and-box .upload-file-box {
     width: 30%;
 }
 
@@ -208,11 +250,26 @@ function _printTaskStatus(status) {
     margin-right: 1em;
 }
 
-.upload-box button {
+.upload-box.isfailed button {
     background-color: rgba(255, 0, 81, 0.726);
+    border-radius: 10px;
 }
 
-.upload-box button:hover {
+.upload-box .isfailed button:hover{
     background-color: rgba(167, 4, 55, 0.692);
+}
+
+.upload-box.isnormal button {
+    background-color: rgba(102, 244, 67, 0.823);
+    border-radius: 10px;
+}
+
+.upload-box.isuploading button {
+    background-color: rgba(135,128,132,0.8);
+    border-radius: 10px;
+}
+
+.upload-box .isnormal button:hover{
+    background-color: rgba(8, 166, 32, 0.783);
 }
 </style>
