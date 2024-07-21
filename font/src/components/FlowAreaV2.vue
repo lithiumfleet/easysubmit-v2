@@ -96,20 +96,26 @@ function _printTaskStatus(status) {
                 :class="{ 'not-selected': !checkIfSelected(task.taskid), 'selected': checkIfSelected(task.taskid) }">
                 <div class="details" v-if="checkIfSelected(task.taskid)">
                     <h3>{{ task.name }}</h3>
-                    <div>任务ID: {{ task.taskid }}</div>
-                    <div>截止日期: {{ formatTimeString(task.deadline, 'MMMDo') }}</div>
-                    <div class="extent-explain">
-                        <div>提交文件类型: </div>
-                        <img v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`" :alt="extent">
+                    <div class="info-and-box">
+                        <div>
+                            <div>任务ID: {{ task.taskid }}</div>
+                            <div>截止日期: {{ formatTimeString(task.deadline, 'MMMDo') }}</div>
+                            <div class="extent-explain">
+                                <div>提交文件类型: </div>
+                                <img v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
+                                    :alt="extent">
+                            </div>
+                            <div> 完成情况: {{ _printTaskStatus(task.status) }} </div>
+                        </div>
+                        <UploadFileBox class="upload-file-box" @change-file="handleChangeFile" :allowed-extent="task.allowextent" />
                     </div>
-                    <div> 完成情况: {{ _printTaskStatus(task.status) }} </div>
-                    <p>说明: {{ task.info }}</p>
+                    <div class="info-and-button">
+                        <p>说明: {{ task.info }}</p>
 
-                    <UploadFileBox @change-file="handleChangeFile" :allowed-extent="task.allowextent" />
-
-                    <div v-if="file!==null" class="upload-box">
-                        <div>当前待提交文件: {{ file.name }}</div>
-                        <button @click="submitFile">点击提交</button>
+                        <div v-if="file !== null" class="upload-box">
+                            <div>当前待提交文件: {{ file.name }}</div>
+                            <button @click="submitFile">点击提交</button>
+                        </div>
                     </div>
                 </div>
                 <div v-else>
@@ -180,5 +186,33 @@ function _printTaskStatus(status) {
 
 .details {
     text-align: left;
+}
+
+.details h3 {
+    text-align: center;    
+}
+
+.info-and-box {
+    display: flex;
+    justify-content: space-between;
+    margin-inline-start: 2em;
+    margin-inline-end: 2em;
+}
+
+.info-and-box .upload-file-box{
+    width: 30%;
+}
+
+.info-and-button {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.upload-box button {
+    background-color: rgba(255, 0, 81, 0.726);
+}
+
+.upload-box button:hover {
+    background-color: rgba(167, 4, 55, 0.692);
 }
 </style>

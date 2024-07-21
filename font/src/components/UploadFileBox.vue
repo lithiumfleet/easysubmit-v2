@@ -10,13 +10,13 @@ function onChange(event) {
     const currentFile = event.target.files[0];
     currentFileinfo.value = {
         name: currentFile.name,
-        size: Math.round(currentFile.size / 1000) + "kb"
+        size: currentFile.size
     }
     emit("changeFile", currentFile);
     console.log('change file!')
 }
-function dragover(e) {
-    e.preventDefault();
+function dragover(event) {
+    event.preventDefault();
     isDragging = true;
 }
 function dragleave() {
@@ -25,6 +25,17 @@ function dragleave() {
 function drop(event) {
     isDragging = false;
 }
+
+type FileInfo = {
+    name: string;
+    size: string;
+};
+
+function formatFileinfo(info: FileInfo): FileInfo {
+    const fsize = Math.round(info.size / 1000) + "kb";
+    const fname = info.name.length > 10 ? info.name.slice(0, 5) + "..." + info.name.slice(-5) : info.name;
+    return { name: fname, size: fsize };
+}
 </script>
 
 <template>
@@ -32,27 +43,35 @@ function drop(event) {
         @dragleave="dragleave" @drop="drop">
         <input type="file" multiple name="file" id="fileInput" class="hidden-input" @change="onChange" ref="file"
             :accept="props.allowedExtent" />
-
-        <label for="fileInput" class="file-label">
-            <div v-if="currentFileinfo !== null" class="preview-card">
-                {{ currentFileinfo.name }}
-                {{ currentFileinfo.size }}
-                可以再次上传覆盖这个文件, 别忘了点击提交按钮.
-            </div>
-            <div v-else-if="isDragging">松开以上传文件</div>
-            <div v-else>拖拽或<u>点击</u>上传文件</div>
+        <label v-if="currentFileinfo !== null" for="fileInput" class="preview-card">
+            <img :title="currentFileinfo.name" src="/src/assets/newfile.png" alt="newfile">
+            <div>{{ formatFileinfo(currentFileinfo).name }}</div>
+            <div>{{ formatFileinfo(currentFileinfo).size }}</div>
+        </label>
+        <label v-else for="fileInput" class="file-label">
+            <img src="/src/assets/addfile.png" alt="addfile">
+            <div v-if="isDragging">松开以上传文件</div>
+            <div v-else>拖拽或<u>点击</u>上传文件</div><br/>
         </label>
     </div>
 </template>
 
 <style scoped>
 .dropzone-container {
-    padding: 4rem;
+    padding: 1rem;
     background: #f7fafc;
     border: 2px dashed;
     border-color: #9e9e9e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+.dropzone-container label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .hidden-input {
     opacity: 0;
     overflow: hidden;
@@ -62,19 +81,22 @@ function drop(event) {
 }
 
 .file-label {
-    font-size: 20px;
-    display: block;
     cursor: pointer;
+    align-content: center;
+    font-size: x-small;
 }
 
 .file-label div u:hover {
     color: blueviolet;
 }
 
+label > img {
+    width: 4em;
+}
+
 .preview-card {
-    display: flex;
-    border: 1px solid #a2a2a2;
-    padding: 5px;
-    margin-left: 5px;
+    color: #817e7e;
+    font-size: x-small;
+    align-content: center;
 }
 </style>
