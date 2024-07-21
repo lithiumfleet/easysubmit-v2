@@ -115,16 +115,14 @@ function _printTaskStatus(status) {
 <template>
     <div class="flow-area">
         <div class="id-inserter">
-            <div v-if="idIsValid">step 1. 输入学号</div>
+            <div v-if="idIsValid">学号</div>
             <div v-else>请输入学号进行后续操作</div>
             <input type="text" v-model="stuid" @blur="checkID" />
             <div v-if="idIsValid !== null && !idIsValid">请再次检查学号是否输入错误</div>
         </div>
 
-
-
         <div v-if="idIsValid" class="task-list">
-            <div>step 2. 选择任务</div>
+            <div>选择任务</div>
             <div class="task-card" v-for="task in taskList" :key="task.taskid" @click="selectedTaskID = task.taskid"
                 :class="{ 'not-selected': !checkIfSelected(task.taskid), 'selected': checkIfSelected(task.taskid) }">
                 <div class="details" v-if="checkIfSelected(task.taskid)">
@@ -143,24 +141,37 @@ function _printTaskStatus(status) {
                         <UploadFileBox class="upload-file-box" @change-file="handleChangeFile"
                             :allowed-extent="task.allowextent" />
                     </div>
-                    <div class="info-and-button">
+                    <div class="task-desc-area">
                         <p>说明: {{ task.info }}</p>
-                        <div v-if="uploadStatus!==Status.uploading&&uploadStatus!==Status.noUploading" class="upload-box" :class="{isfailed:uploadStatus!==Status.ok, isnormal:uploadStatus===Status.ok}">
-                            <div>{{ uploadStatusMessage }}</div>
-                            <button @click="submitFile">重新提交</button>
+                    </div>
+                    <div class="upload-button">
+                        <div v-if="file !== null">
+                            <div v-if="uploadStatus === Status.noUploading" class="upload-box isnormal">
+                                <div>当前待提交文件: {{ file.name }}</div>
+                                <button v-if="checkTaskStatus(task.status)" @click="submitFile">再次提交</button>
+                                <button v-else @click="submitFile">点击提交</button>
+                            </div>
+                            <div v-else-if="uploadStatus === Status.uploading" class="upload-box isuploading">
+                                <div>当前待提交文件: {{ file.name }}</div>
+                                <button disabled @click="submitFile">处理中,请勿离开页面...</button>
+                            </div>
+                            <div v-else>
+                                <div v-if="uploadStatus === Status.ok" class="upload-box isnormal">
+                                    <div>{{ uploadStatusMessage }}</div>
+                                    <button @click="submitFile">重新提交</button>
+                                </div>
+                                <div v-else class="upload-box isfailed">
+                                    <div>{{ uploadStatusMessage }}</div>
+                                    <button @click="submitFile">重新提交</button>
+                                </div>
+
+                            </div>
                         </div>
-                        <div v-else-if="uploadStatus===Status.uploading" class="upload-box isuploading">
-                            <div>当前待提交文件: {{ file.name }}</div>
-                            <button disabled @click="submitFile">处理中...</button>
-                        </div>
-                        <div v-else-if="file!==null" class="upload-box isnormal">
-                            <div>当前待提交文件: {{ file.name }}</div>
-                            <button v-if="checkTaskStatus(task.status)" @click="submitFile">再次提交</button>
-                            <button v-else @click="submitFile">点击提交</button>
-                        </div>
+
+
                     </div>
                 </div>
-                <div v-else>
+                <div class="thumbnail" v-else>
                     <div class="task-name">{{ task.name }}</div>
                     <div>{{ formatTimeString(task.deadline, 'MMMDo') }} 截止</div>
                     <img class="extent-img" v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
@@ -182,6 +193,10 @@ function _printTaskStatus(status) {
 .flow-area>* {
     margin: 2em;
     text-align: center;
+}
+
+.flow-area>*>* {
+    margin: 0.6rem;
 }
 
 .id-inserter {
@@ -242,12 +257,29 @@ function _printTaskStatus(status) {
 }
 
 .info-and-box .upload-file-box {
-    width: 30%;
+    width: 35%;
 }
 
-.info-and-button {
+.task-desc-area {
     margin-left: 1em;
     margin-right: 1em;
+}
+
+.upload-button {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.upload-box.isuploading button {
+    background-color: rgba(182, 179, 181, 0.953);
+    border-radius: 10px;
+}
+
+.upload-box.isfailed,
+.upload-box.isuploading,
+.upload-box.isnormal
+{
+    font-size: xx-small;
 }
 
 .upload-box.isfailed button {
@@ -255,7 +287,7 @@ function _printTaskStatus(status) {
     border-radius: 10px;
 }
 
-.upload-box .isfailed button:hover{
+.upload-box .isfailed button:hover {
     background-color: rgba(167, 4, 55, 0.692);
 }
 
@@ -264,12 +296,7 @@ function _printTaskStatus(status) {
     border-radius: 10px;
 }
 
-.upload-box.isuploading button {
-    background-color: rgba(135,128,132,0.8);
-    border-radius: 10px;
-}
-
-.upload-box .isnormal button:hover{
+.upload-box .isnormal button:hover {
     background-color: rgba(8, 166, 32, 0.783);
 }
 </style>
