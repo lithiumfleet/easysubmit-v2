@@ -1,26 +1,23 @@
 <script setup>
 import NavBar from './components/NavBar.vue'
-import WelcomeTitle from './components/WelcomeTitle.vue';
 import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <NavBar/>
-  <div class="user-area">
-    <WelcomeTitle/>  
-    <RouterView/>
+  <div class="page">
+    <NavBar />
+    <div class="main">
+      <RouterView />
+    </div>
   </div>
-  <footer>
-    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-  </footer>
-
+  <footer>Powered by Vue3 & Express.</footer>
 </template>
 
 <style scoped>
-.user-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+footer {
+  height: 5em;
+  font-size: xx-small;
+  text-align: center;
+  color: #c5c5c6;
 }
-
 </style>

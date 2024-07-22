@@ -4,16 +4,17 @@ import { RouterLink } from 'vue-router'
 
 <template>
     <nav class="navbar">
-        <div class="icon"> 
-            <img src="https://www.filemail.com/images/logo/logo-horiz.svg" alt="logo">
+        <div class="icon">
+            <RouterLink class="item" to="/">
+                <img src="https://www.filemail.com/images/logo/logo-horiz.svg" alt="logo">
+            </RouterLink>
         </div>
-        <div class="direct"> </div>
-            <div class="list">
-                <RouterLink class="item" to="/">提交文件</RouterLink>
-                <RouterLink class="item" to="/history">提交记录</RouterLink>
-                <RouterLink class="item" to="/about">关于网站</RouterLink>
-            </div>
-        <a class="github" href="https://github.com/lithiumfleet/easysubmit-v2"> 
+        <div class="list">
+            <RouterLink class="item" to="/upload">提交文件</RouterLink>
+            <RouterLink class="item" to="/history">提交记录</RouterLink>
+            <RouterLink class="item" to="/about">关于网站</RouterLink>
+        </div>
+        <a class="github" href="https://github.com/lithiumfleet/easysubmit-v2">
             <img src="https://img.icons8.com/?size=100&id=80462&format=png&color=000000" alt="github">
         </a>
     </nav>
@@ -23,13 +24,14 @@ import { RouterLink } from 'vue-router'
 .navbar {
     display: flex;
     flex-direction: row;
-    width:100%;
+    width: 100%;
     position: sticky;
     top: 0px;
     padding: 1em 0em 1em 0em;
-    z-index: 1000;
-    background-color: whitesmoke;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.8);
     background-clip: border-box;
+    backdrop-filter: blur(10px);
 }
 
 .icon {
@@ -46,10 +48,13 @@ import { RouterLink } from 'vue-router'
     margin-left: 6%;
 }
 
-.list > .item {
-    font: bold;
-    font-size: small;
-    margin-left: 1em;
+.list>.item {
+    font-weight: 550;
+    font-size: xx-small;
+    margin-left: 2em;
+    color: rgba(26, 26, 40, 0.548) ;
+
+
 }
 
 .github img {

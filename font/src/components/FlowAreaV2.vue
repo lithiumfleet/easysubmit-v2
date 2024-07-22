@@ -50,10 +50,8 @@ function getTaskList() {
 }
 
 function checkID() {
-    idIsValid.value = false;
-    if (stuid.value === "") {
-        idIsValid.value = null;
-    } else {
+    idIsValid.value = null;
+    if (stuid.value !== "") {
         _postToServer('/checkid', { "stuid": stuid.value }, data => idIsValid.value = data.result);
     }
 }
@@ -103,7 +101,7 @@ function submitFile() {
 }
 
 function checkTaskStatus(status) {
-    return status === "ok" ? true : false;
+    return status === "finished" ? true : false;
 }
 
 function _printTaskStatus(status) {
@@ -115,92 +113,103 @@ function _printTaskStatus(status) {
 <template>
     <div class="flow-area">
         <div class="id-inserter">
-            <div v-if="idIsValid">学号</div>
+            <img v-if="!idIsValid" src="/src/assets/lock.png" alt="locked">
+            <img v-else src="/src/assets/uploadfile.png" alt="locked">
+            <div v-if="idIsValid">当前学号</div>
             <div v-else>请输入学号进行后续操作</div>
             <input type="text" v-model="stuid" @blur="checkID" />
             <div v-if="idIsValid !== null && !idIsValid">请再次检查学号是否输入错误</div>
         </div>
 
-        <div v-if="idIsValid" class="task-list">
-            <div>选择任务</div>
-            <div class="task-card" v-for="task in taskList" :key="task.taskid" @click="selectedTaskID = task.taskid"
-                :class="{ 'not-selected': !checkIfSelected(task.taskid), 'selected': checkIfSelected(task.taskid) }">
-                <div class="details" v-if="checkIfSelected(task.taskid)">
-                    <h3>{{ task.name }}</h3>
-                    <div class="info-and-box">
-                        <div>
-                            <div>任务ID: {{ task.taskid }}</div>
-                            <div>截止日期: {{ formatTimeString(task.deadline, 'MMMDo') }}</div>
-                            <div class="extent-explain">
-                                <div>文件类型: </div>
-                                <img v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
-                                    :alt="extent">
-                            </div>
-                            <div> 完成情况: {{ _printTaskStatus(task.status) }} </div>
-                        </div>
-                        <UploadFileBox class="upload-file-box" @change-file="handleChangeFile"
-                            :allowed-extent="task.allowextent" />
-                    </div>
-                    <div class="task-desc-area">
-                        <p>说明: {{ task.info }}</p>
-                    </div>
-                    <div class="upload-button">
-                        <div v-if="file !== null">
-                            <div v-if="uploadStatus === Status.noUploading" class="upload-box isnormal">
-                                <div>当前待提交文件: {{ file.name }}</div>
-                                <button v-if="checkTaskStatus(task.status)" @click="submitFile">再次提交</button>
-                                <button v-else @click="submitFile">点击提交</button>
-                            </div>
-                            <div v-else-if="uploadStatus === Status.uploading" class="upload-box isuploading">
-                                <div>当前待提交文件: {{ file.name }}</div>
-                                <button disabled @click="submitFile">处理中,请勿离开页面...</button>
-                            </div>
-                            <div v-else>
-                                <div v-if="uploadStatus === Status.ok" class="upload-box isnormal">
-                                    <div>{{ uploadStatusMessage }}</div>
-                                    <button @click="submitFile">重新提交</button>
+        <div v-if="idIsValid" class="task-list-warp">
+            <div class="prompt">选择任务</div>
+            <div class="task-list">
+                <div class="task-card" v-for="task in taskList" :key="task.taskid" @click="selectedTaskID = task.taskid"
+                    :class="{ 'not-selected': !checkIfSelected(task.taskid), 'selected': checkIfSelected(task.taskid) }">
+                    <div class="details" v-if="checkIfSelected(task.taskid)">
+                        <h3>{{ task.name }}</h3>
+                        <div class="info-and-box">
+                            <div>
+                                <div>任务ID: {{ task.taskid }}</div>
+                                <div>截止日期: {{ formatTimeString(task.deadline, 'MMMDo') }}</div>
+                                <div class="extent-explain">
+                                    <div>文件类型: </div>
+                                    <img v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
+                                        :alt="extent">
                                 </div>
-                                <div v-else class="upload-box isfailed">
-                                    <div>{{ uploadStatusMessage }}</div>
-                                    <button @click="submitFile">重新提交</button>
-                                </div>
-
+                                <div> 完成情况: {{ _printTaskStatus(task.status) }} </div>
                             </div>
+                            <UploadFileBox class="upload-file-box" @change-file="handleChangeFile"
+                                :allowed-extent="task.allowextent" />
                         </div>
+                        <div class="task-desc-area">
+                            <p>说明: {{ task.info }}</p>
+                        </div>
+                        <div class="upload-button">
+                            <div v-if="file !== null">
+                                <div v-if="uploadStatus === Status.noUploading" class="upload-box isnormal">
+                                    <div>当前待提交文件: {{ file.name }}</div>
+                                    <button v-if="checkTaskStatus(task.status)" @click="submitFile">再次提交</button>
+                                    <button v-else @click="submitFile">点击提交</button>
+                                </div>
+                                <div v-else-if="uploadStatus === Status.uploading" class="upload-box isuploading">
+                                    <div>当前待提交文件: {{ file.name }}</div>
+                                    <button disabled @click="submitFile">处理中,请勿离开页面...</button>
+                                </div>
+                                <div v-else>
+                                    <div v-if="uploadStatus === Status.ok" class="upload-box isnormal">
+                                        <div>{{ uploadStatusMessage }}</div>
+                                        <button @click="submitFile">重新提交</button>
+                                    </div>
+                                    <div v-else class="upload-box isfailed">
+                                        <div>{{ uploadStatusMessage }}</div>
+                                        <button @click="submitFile">重新提交</button>
+                                    </div>
+
+                                </div>
+                            </div>
 
 
+                        </div>
                     </div>
-                </div>
-                <div class="thumbnail" v-else>
-                    <div class="task-name">{{ task.name }}</div>
-                    <div>{{ formatTimeString(task.deadline, 'MMMDo') }} 截止</div>
-                    <img class="extent-img" v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
-                        :alt="extent">
-                    <img class="status-img" v-if="checkTaskStatus(task.status)" src="/src/assets/finish.png"
-                        alt="status">
+                    <div class="thumbnail" v-else>
+                        <div class="task-name">{{ task.name }}</div>
+                        <div>{{ formatTimeString(task.deadline, 'MMMDo') }} 截止</div>
+                        <img class="extent-img" v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
+                            :alt="extent">
+                        <img class="status-img" v-if="checkTaskStatus(task.status)" src="/src/assets/finish.png"
+                            alt="status">
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
 <style scoped>
 .flow-area {
-    width: 60%;
-}
-
-.flow-area>* {
-    margin: 2em;
-    text-align: center;
-}
-
-.flow-area>*>* {
-    margin: 0.6rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .id-inserter {
+    margin: 2em;
     margin-top: 0;
+    text-align: center;
+}
+
+.id-inserter>* {
+    margin: 0.6rem;
+}
+
+.task-list-warp {
+    width: 60%;
+    margin-left: 20%;
+}
+
+.task-list-warp .prompt {
     text-align: center;
 }
 
@@ -220,6 +229,7 @@ function _printTaskStatus(status) {
     width: 100%;
     position: relative;
     overflow: hidden;
+    box-shadow: 3px 3px 5px rgb(150, 174, 176);
 }
 
 .extent-explain {
@@ -277,8 +287,7 @@ function _printTaskStatus(status) {
 
 .upload-box.isfailed,
 .upload-box.isuploading,
-.upload-box.isnormal
-{
+.upload-box.isnormal {
     font-size: xx-small;
 }
 
