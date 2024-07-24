@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "name_list",
+            "database": "${workspaceFolder:easysubmit-v2}/backend/DBFiles/server.db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

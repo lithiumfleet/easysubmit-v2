@@ -33,7 +33,7 @@ function checkID() {
             <div v-if="idIsValid !== null && !idIsValid">请再次检查学号是否输入错误</div>
         </div>
         <div v-if="idIsValid" class="table-warp">
-            <img src="/src/assets/search.png" alt="locked">
+            <img src="/src/assets/search.png" alt="search">
             <table>
                 <caption>
                     <h3>{{ stuid }}的提交记录表</h3>
@@ -54,6 +54,7 @@ function checkID() {
                     </tr>
                 </tbody>
             </table>
+            <div class="no-hist" v-if="historyList.length===0">暂无提交记录</div>
         </div>
     </div>
 </template>
@@ -76,6 +77,13 @@ function checkID() {
 .table-wrap {
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+}
+
+.no-hist {
+    margin-top: 5em;
+    margin-bottom: 5em;
+    color: rgb(160, 159, 159);
+    font-size: larger;
 }
 
 table {
