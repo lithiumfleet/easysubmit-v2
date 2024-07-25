@@ -60,7 +60,7 @@ class sqlDB {
     }
     addRecord(stuid, taskid, currentFileName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const time = (0, moment_1.default)().toISOString();
+            const time = (0, moment_1.default)().toISOString(true);
             const lastRecord = yield this.getRecord(stuid, taskid);
             if (lastRecord !== undefined) {
                 const { taskname, filename } = lastRecord;
