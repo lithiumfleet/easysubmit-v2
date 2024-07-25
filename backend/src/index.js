@@ -10,8 +10,8 @@ const {sqlDB} = require('../dist/database');
 let db;
 (async () => {
     db = await sqlDB.init("./DBFiles/server.db");
-    await db.readTableFromFile("./DBFiles/namelist.json", "namelist");
-    await db.readTableFromFile("./DBFiles/tasklist.json", "tasklist");
+    // await db.readTableFromFile("./DBFiles/namelist.json", "namelist");
+    // await db.readTableFromFile("./DBFiles/tasklist.json", "tasklist");
     console.log("init database");
 })();
 
