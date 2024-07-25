@@ -88,7 +88,7 @@ export class sqlDB implements serverDB {
   }
 
   async addRecord(stuid: string, taskid: string, currentFileName: string): Promise<void> {
-    const time = moment().toISOString();
+    const time = moment().toISOString(true);
     const lastRecord = await this.getRecord(stuid, taskid);
     if (lastRecord !== undefined) {
       const { taskname, filename } = lastRecord;

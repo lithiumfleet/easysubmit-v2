@@ -67,8 +67,8 @@ function handleChangeFile(newFile: string) {
 function submitFile() {
     const formData = new FormData();
     formData.append("stuid", stuid.value);
-    formData.append("file", file.value);
     formData.append("taskid", selectedTaskID.value);
+    formData.append("file", file.value);
 
     uploadStatus.value = Status.uploading;
 
