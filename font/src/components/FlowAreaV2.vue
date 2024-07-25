@@ -137,7 +137,7 @@ function _printTaskStatus(status) {
                                     <img v-for="extent in task.allowextent" :src="`/src/assets/${extent}.png`"
                                         :alt="extent">
                                 </div>
-                                <div> 完成情况: {{ _printTaskStatus(task.status) }} </div>
+                                <div>完成情况: {{ _printTaskStatus(task.status) }} </div>
                             </div>
                             <UploadFileBox class="upload-file-box" @change-file="handleChangeFile"
                                 :allowed-extent="task.allowextent" />
@@ -237,7 +237,9 @@ function _printTaskStatus(status) {
 }
 
 .extent-explain img {
-    width: 1.5em;
+    width: 1.2em;
+    height: 1.2em;
+    padding-left: 0.3em;
 }
 
 .extent-img {
