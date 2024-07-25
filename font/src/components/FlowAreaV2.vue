@@ -1,16 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { rooturl } from '../config';
 import { _postToServer } from './_postToServer';
 import { _compareTimeString, formatTimeString } from './_timeUtils';
 import UploadFileBox from './UploadFileBox.vue';
 
-/* info: get id from user and validate using server, then show tasklist and file uploader */
-/* protocols
-*       post /ckeckid {"stuid": "1234567890"} => {"result": true/false}
-*       post /checktasklist {"stuid": "1234567890"} => [...{"taskid","name","deadline","info","status","allowextent"}]
-*       post /submit {"stuid": "1234567890", "file": file, "taskid"="12"} => {"status":enum Status, "message" }
-*       post /checkhistory {"stuid": "1234567890"} => {"time", "taskid", "taskname", "filename", "coveredfile"}
-*/
 
 const stuid = ref(""); // FIXME: what about using const stuid = ref("")? 
 const idIsValid = ref(null);
@@ -74,7 +68,7 @@ function submitFile() {
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
-    fetch("http://127.0.0.1:9999/submit", {
+    fetch(`${rooturl}/submit`, {
         method: "POST",
         enctype: "multipart/form-data",
         body: formData,
@@ -117,7 +111,7 @@ function _printTaskStatus(status) {
             <img v-else src="/src/assets/uploadfile.png" alt="locked">
             <div v-if="idIsValid">当前学号</div>
             <div v-else>请输入学号进行后续操作</div>
-            <input type="text" v-model="stuid" @blur="checkID" />
+            <input @keyup.enter="checkID" type="text" v-model="stuid" @blur="checkID" />
             <div v-if="idIsValid !== null && !idIsValid">请再次检查学号是否输入错误</div>
         </div>
 

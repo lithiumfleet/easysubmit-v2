@@ -29,7 +29,7 @@ function checkID() {
         <div v-if="!idIsValid" class="id-inserter">
             <img src="/src/assets/lock.png" alt="locked">
             <div>请输入学号查看提交记录</div>
-            <input type="text" v-model="stuid" @blur="checkID" />
+            <input @keyup.enter="checkID" type="text" v-model="stuid" @blur="checkID" />
             <div v-if="idIsValid !== null && !idIsValid">请再次检查学号是否输入错误</div>
         </div>
         <div v-if="idIsValid" class="table-warp">

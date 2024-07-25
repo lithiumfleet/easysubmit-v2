@@ -1,6 +1,8 @@
+import { rooturl } from "../config";
+
 export function _postToServer(endpoint, jsondata, cb) {
     console.log('send ' + JSON.stringify(jsondata) + ' to server');
-    const url = "http://127.0.0.1:9999" + endpoint;
+    const url = rooturl + endpoint;
     fetch(url, {
         method: "POST",
         headers: {

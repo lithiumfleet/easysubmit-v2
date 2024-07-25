@@ -17,13 +17,13 @@ function onChange(event) {
 }
 function dragover(event) {
     event.preventDefault();
-    isDragging = true;
+    isDragging.value = true;
 }
 function dragleave() {
-    isDragging = false;
+    isDragging.value = false;
 }
 function drop(event) {
-    isDragging = false;
+    isDragging.value = false;
 }
 
 type FileInfo = {
