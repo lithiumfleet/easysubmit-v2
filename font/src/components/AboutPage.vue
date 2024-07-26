@@ -4,7 +4,7 @@
 <template>
     <div class="about-page">
         <img src="/src/assets/info.png" alt="info">
-        <h3>About EasySubmit.</h3>
+        <h1>About EasySubmit.</h1>
         <div class="text-main">
             <div>这是EasySubmit的第2次尝试. 比上一次简洁一些.</div>
             <div>这是一个简易文件接收服务器, 尽可能解决TIM吞文件和命名格式之类的问题.</div>
@@ -26,7 +26,7 @@
 }
 
 .text-main {
-    text-align: start;
+    text-align: center;
     margin-top: 2%;
     margin-bottom: 10%;
     width: 55%;

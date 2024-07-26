@@ -15,16 +15,6 @@ function onChange(event) {
     emit("changeFile", currentFile);
     console.log('change file!')
 }
-function dragover(event) {
-    event.preventDefault();
-    isDragging.value = true;
-}
-function dragleave() {
-    isDragging.value = false;
-}
-function drop(event) {
-    isDragging.value = false;
-}
 
 type FileInfo = {
     name: string;
@@ -39,8 +29,7 @@ function formatFileinfo(info: FileInfo): FileInfo {
 </script>
 
 <template>
-    <div class="dropzone-container" :style="isDragging && 'border-color: greenyellow;'" @dragover="dragover"
-        @dragleave="dragleave" @drop="drop">
+    <div class="dropzone-container" :style="isDragging && 'border-color: greenyellow;'">
         <input type="file" multiple name="file" id="fileInput" class="hidden-input" @change="onChange" ref="file"
             :accept="props.allowedExtent" />
         <label v-if="currentFileinfo !== null" for="fileInput" class="preview-card">
@@ -50,15 +39,14 @@ function formatFileinfo(info: FileInfo): FileInfo {
         </label>
         <label v-else for="fileInput" class="file-label">
             <img src="/src/assets/addfile.png" alt="addfile">
-            <div v-if="isDragging">松开以上传文件</div>
-            <div v-else>拖拽或<u>点击</u>上传文件</div><br/>
+            <div ><u>点击</u>上传文件</div><br/>
         </label>
     </div>
 </template>
 
 <style scoped>
 .dropzone-container {
-    padding: 1rem;
+    padding: 1em;
     background: #f7fafc;
     border: 2px dashed;
     border-color: #9e9e9e;
@@ -83,7 +71,7 @@ function formatFileinfo(info: FileInfo): FileInfo {
 .file-label {
     cursor: pointer;
     align-content: center;
-    font-size: x-small;
+    font-size: 0.8em;
 }
 
 .file-label div u:hover {
@@ -96,7 +84,7 @@ label > img {
 
 .preview-card {
     color: #817e7e;
-    font-size: x-small;
+    font-size: 0.8em;
     align-content: center;
 }
 </style>

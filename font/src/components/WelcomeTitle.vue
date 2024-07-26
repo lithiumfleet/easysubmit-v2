@@ -48,10 +48,14 @@
     flex-direction: row;
 }
 .nav-area .item{
+    padding: 2em;
     margin-right: 2em;
     border-radius: 6px;
     height: 2em;
     border: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .nav-upload {
     background-color: rgb(109, 118, 234);
@@ -62,7 +66,7 @@
 .nav-upload .router .text {
     font-weight: bold;
     color: rgb(255, 255, 255);
-    font-size: 0.8em;
+    font-size: 1.2em;
 }
 .nav-history {
     background-color: rgb(234, 234, 235);
@@ -73,6 +77,6 @@
 .nav-history .router .text {
     font-weight: bold;
     color: black;
-    font-size: 0.8em;
+    font-size: 1.2em;
 }
 </style>

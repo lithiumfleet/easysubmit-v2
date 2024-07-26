@@ -28,21 +28,21 @@ function checkID() {
     <div class="pannel">
         <div v-if="!idIsValid" class="id-inserter">
             <img src="/src/assets/lock.png" alt="locked">
-            <div>请输入学号查看提交记录</div>
-            <input @keyup.enter="checkID" type="text" v-model="stuid" @blur="checkID" />
+            <div class="notice">请输入学号查看提交记录</div>
+            <input class="inputID" placeholder="输入学号后回车以确认" @keyup.enter="checkID" type="text" v-model="stuid" @blur="checkID" />
             <div v-if="idIsValid !== null && !idIsValid">请再次检查学号是否输入错误</div>
         </div>
         <div v-if="idIsValid" class="table-warp">
             <img src="/src/assets/search.png" alt="search">
             <table>
                 <caption>
-                    <h3>{{ stuid }}的提交记录表</h3>
+                    <h2>{{ stuid }}的提交记录表</h2>
                 </caption>
                 <thead>
                     <tr>
-                        <th>time</th>
-                        <th>taskname(taskid)</th>
-                        <th>action</th>
+                        <th>提交时间</th>
+                        <th>任务名称(id)</th>
+                        <th>提交记录</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +61,7 @@ function checkID() {
 
 <style scoped>
 .pannel>* {
+    font-size: 1.5em;
     margin: 2em;
     text-align: center;
 }
@@ -68,6 +69,12 @@ function checkID() {
 .id-inserter {
     margin-top: 0;
     text-align: center;
+}
+
+.inputID {
+    font-size: 0.8em;
+    height: 1.6em;
+    width: 10em;
 }
 
 .id-inserter>* {

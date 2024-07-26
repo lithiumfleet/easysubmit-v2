@@ -26,7 +26,7 @@ import { RouterLink } from 'vue-router'
     flex-direction: row;
     width: 100%;
     position: sticky;
-    top: 0px;
+    top: 0em;
     padding: 1em 0em 1em 0em;
     z-index: 1;
     background-color: rgba(255, 255, 255, 0.8);
@@ -39,7 +39,7 @@ import { RouterLink } from 'vue-router'
 }
 
 .icon img {
-    width: 80px;
+    height: 2em;
     vertical-align: auto;
 }
 
@@ -49,16 +49,14 @@ import { RouterLink } from 'vue-router'
 }
 
 .list>.item {
-    font-weight: 550;
-    font-size: xx-small;
+    font-weight: 5em;
+    font-size: 1.3em;
     margin-left: 2em;
     color: rgba(26, 26, 40, 0.548) ;
-
-
 }
 
 .github img {
-    width: 25px;
+    height: 2.5em;
     vertical-align: auto;
     position: absolute;
     right: 5%;

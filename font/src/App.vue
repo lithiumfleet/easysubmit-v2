@@ -16,7 +16,7 @@ import { RouterView } from 'vue-router';
 <style scoped>
 footer {
   height: 5em;
-  font-size: xx-small;
+  font-size: 0.8em;
   text-align: center;
   color: #c5c5c6;
 }

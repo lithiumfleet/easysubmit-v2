@@ -40,7 +40,10 @@ watch(idIsValid, (newVal) => {
 });
 
 function getTaskList() {
-    _postToServer('/checktasklist', { "stuid": stuid.value }, data => taskList.value = data);
+    _postToServer('/checktasklist', { "stuid": stuid.value }, (data) => {
+        taskList.value = data;
+        taskList.value.sort((a,b)=>{return a.deadline<b.deadline?1:-1;});
+    });
 }
 
 function checkID() {
@@ -67,7 +70,7 @@ function submitFile() {
     uploadStatus.value = Status.uploading;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
     fetch(`${rooturl}/submit`, {
         method: "POST",
         enctype: "multipart/form-data",
@@ -111,7 +114,7 @@ function _printTaskStatus(status) {
             <img v-else src="/src/assets/uploadfile.png" alt="locked">
             <div v-if="idIsValid">当前学号</div>
             <div v-else>请输入学号进行后续操作</div>
-            <input @keyup.enter="checkID" type="text" v-model="stuid" @blur="checkID" />
+            <input class="inputID" placeholder="输入学号后回车以确认" @keyup.enter="checkID" type="text" v-model="stuid" @blur="checkID" />
             <div v-if="idIsValid !== null && !idIsValid">请再次检查学号是否输入错误</div>
         </div>
 
@@ -182,6 +185,7 @@ function _printTaskStatus(status) {
 
 <style scoped>
 .flow-area {
+    font-size: 1.5em;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -195,7 +199,13 @@ function _printTaskStatus(status) {
 }
 
 .id-inserter>* {
-    margin: 0.6rem;
+    margin: 0.6em;
+}
+
+.inputID {
+    font-size: 0.8em;
+    height: 1.6em;
+    width: 10em;
 }
 
 .task-list-warp {
@@ -284,7 +294,7 @@ function _printTaskStatus(status) {
 .upload-box.isfailed,
 .upload-box.isuploading,
 .upload-box.isnormal {
-    font-size: xx-small;
+    font-size: 0.8em;
 }
 
 .upload-box.isfailed button {

@@ -25,6 +25,9 @@ import WelcomeTitle from './WelcomeTitle.vue';
 </template>
 
 <style scoped>
+.title{
+    font-size: 1.5em;
+}
 
 .user-area {
     display: flex;
@@ -33,6 +36,7 @@ import WelcomeTitle from './WelcomeTitle.vue';
 }
 
 .about {
+    font-size: 2em;
     background-color: white;
     height: 30%;
     margin-bottom: 2em;
